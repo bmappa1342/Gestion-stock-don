@@ -1,3 +1,4 @@
+import { UserButton } from '@clerk/nextjs'
 import { Icon, ListTree, Menu, PackagePlus, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -48,12 +49,14 @@ const NavBar = () => {
         </button>
         <div className='hidden space-x-2 sm:flex items-center'>
             {renderLink("btn")}
+            <UserButton></UserButton>
         </div>
         </div>
 
         <div className={`absolute top-0 w-full bg-base-100 h-screen flex-col gap-2 p-4 transition-all duration-300 sm:hidden 
             z-50 ${menuOpens? "left-0": "-left-full"}`}>
                 <div className='flex justify-between'>
+                    <UserButton></UserButton>
                  <button className='btn w-fit sm:hidden btn-sm' onClick={()=>setMenuOpens(!menuOpens)}>
                  <X className='w-4 h-4'></X>
                 </button>
