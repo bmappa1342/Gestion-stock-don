@@ -1,10 +1,13 @@
-import { UserButton } from '@clerk/nextjs'
+"use client"
+import { UserButton, useUser } from '@clerk/nextjs'
 import { Icon, ListTree, Menu, PackagePlus, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { checkAndAddAssociation } from '../actions'
 
 const NavBar = () => {
+    const {user} = useUser()
 
     const pathname = usePathname()
     const [menuOpens, setMenuOpens] = useState(false)
@@ -12,6 +15,12 @@ const NavBar = () => {
     const navLink = [
         {href: "/categories" , label: "Categories", icon: ListTree}
     ]
+
+    useEffect(()=>{
+        if(user?.primaryEmailAddress?.emailAddress && user.fullName){
+            checkAndAddAssociation(user?.primaryEmailAddress?.emailAddress , user.fullName)
+        }
+    }, [user])
     const renderLink = (baseClass : string) =>(
         <>
         {navLink.map(({href, label, icon: Icon}) =>{
