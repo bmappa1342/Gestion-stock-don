@@ -1,7 +1,7 @@
 // app/actions.ts
 "use server"
 
-import { Category } from "@prisma/client"
+import { Category, Product } from "@prisma/client"
 import prisma from "./lib/prisma"
 import { FormDataType } from "@/type"
 
@@ -276,7 +276,7 @@ export async function readProductById(productId: string, email: string): Promise
 
         return {
             ...product,
-            categoryName: product.category?.name
+            categoryName:  product.category?.name
         }
     } catch (error) {
         console.error(error)

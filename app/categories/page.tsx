@@ -7,14 +7,13 @@ import { createCategory, deleteCategory, readCategories, updateCategory } from '
 import { toast } from 'react-toastify'
 import { Category } from '@prisma/client'
 import EmptyState from '../components/EmptyState'
-import { Pencil, Trash } from 'lucide-react'
+import { Pencil, Trash, Plus } from 'lucide-react'
 
-const page = () => {
+const Page = () => {
   const { user } = useUser()
   const email = user?.primaryEmailAddress?.emailAddress as string
 
   const [name, setName] = useState("")
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [description, setDescription] = useState("")
   const [loading, setLoading] = useState(false)
   const [editMode, setEditMode] = useState(false)
@@ -28,6 +27,7 @@ const page = () => {
         setCategories(data)
     }
   }
+
   useEffect(() => {
     loadCategories()
   }, [email])
@@ -71,12 +71,11 @@ const page = () => {
 
   const openEditModal = (category: Category) => {
     setName(category.name);
-    setDescription(category.description || " ");
+    setDescription(category.description || "");
     setEditMode(true);
     setEditingCategoryId(category.id);
     (document.getElementById("category_modal") as HTMLDialogElement)?.showModal()
   }
-
 
   const handleDeleteCategory = async (categoryId: string) => {
     const confirmDelete = confirm("Are you sure you want to delete this category? All associated products will be deleted as well")
@@ -86,33 +85,58 @@ const page = () => {
     toast.success("Category deleted successful.")
   }
 
-
   return (
     <Wrapper>
-
-      <div>
-        <div className='mb-4'>
-          <button className='btn btn-primary'
+      <div className='w-full max-w-7xl mx-auto py-8'>
+        
+        {/* En-tête de la page */}
+        <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4'>
+          <div>
+            <h1 className='text-3xl font-extrabold mb-2'>Categories</h1>
+            <p className='text-base-content/60 text-sm'>
+              Manage your product categories and organize your store.
+            </p>
+          </div>
+          <button 
+            className='btn btn-primary shadow-sm'
             onClick={openCreateModal}
           >
-           Add Category
+            <Plus className='w-5 h-5 mr-1' />
+            Add Category
           </button>
         </div>
 
-
+        {/* Liste des catégories (Grille) */}
         {categories.length > 0 ? (
-          <div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {categories.map((category) => (
-              <div key={category.id} className='mb-2 p-5 border-2 border-base-200 rounded-3xl flex justify-between items-center'>
-                <div>
-                  <strong className='text-lg'>{category.name}</strong>
-                  <div className='text-sm'>{category.description}</div>
+              <div 
+                key={category.id} 
+                className='bg-base-100 p-6 rounded-2xl shadow-sm border border-base-200 hover:shadow-md transition-all flex flex-col justify-between group'
+              >
+                <div className='mb-4'>
+                  <h3 className='text-xl font-bold text-base-content mb-2 line-clamp-1'>
+                    {category.name}
+                  </h3>
+                  <p className='text-sm text-base-content/70 line-clamp-3'>
+                    {category.description || <span className="italic opacity-50">No description provided</span>}
+                  </p>
                 </div>
-                <div className='flex gap-2'>
-                  <button className='btn btn-sm' onClick={() => openEditModal(category)}>
+                
+                {/* Actions (Boutons d'édition et suppression) */}
+                <div className='flex justify-end gap-2 mt-4 pt-4 border-t border-base-200/50'>
+                  <button 
+                    className='btn btn-sm btn-ghost text-base-content/70 hover:text-primary hover:bg-primary/10' 
+                    onClick={() => openEditModal(category)}
+                    title="Edit category"
+                  >
                     <Pencil className='w-4 h-4' />
                   </button>
-                  <button className='btn btn-sm btn-error' onClick={() => handleDeleteCategory(category.id)}>
+                  <button 
+                    className='btn btn-sm btn-ghost text-base-content/70 hover:text-error hover:bg-error/10' 
+                    onClick={() => handleDeleteCategory(category.id)}
+                    title="Delete category"
+                  >
                     <Trash className='w-4 h-4' />
                   </button>
                 </div>
@@ -120,10 +144,12 @@ const page = () => {
             ))}
           </div>
         ) : (
-          <EmptyState
-            message={"No category"}
-            IconComponent='Group'
-          />
+          <div className='bg-base-100 rounded-3xl p-10 border border-base-200 shadow-sm'>
+            <EmptyState
+              message="No category found. Create your first one!"
+              IconComponent='Group'
+            />
+          </div>
         )}
       </div>
 
@@ -137,9 +163,8 @@ const page = () => {
         onSubmit={editMode ? handleUpdateCategory : handleCreateCategory}
         editMode={editMode}
       />
-
     </Wrapper>
   )
 }
 
-export default page
+export default Page
