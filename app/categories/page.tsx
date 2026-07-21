@@ -7,7 +7,7 @@ import { createCategory, deleteCategory, readCategories, updateCategory } from '
 import { toast } from 'react-toastify'
 import { Category } from '@prisma/client'
 import EmptyState from '../components/EmptyState'
-import { Pencil, Trash, Plus } from 'lucide-react'
+import { Pencil, Trash, Plus, FolderTree } from 'lucide-react'
 
 const Page = () => {
   const { user } = useUser()
@@ -87,18 +87,20 @@ const Page = () => {
 
   return (
     <Wrapper>
-      <div className='w-full max-w-7xl mx-auto py-8'>
+      <div className='w-full max-w-7xl mx-auto py-10'>
         
         {/* En-tête de la page */}
-        <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4'>
+        <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6'>
           <div>
-            <h1 className='text-3xl font-extrabold mb-2'>Categories</h1>
-            <p className='text-base-content/60 text-sm'>
-              Manage your product categories and organize your store.
+            <h1 className='text-4xl font-extrabold mb-3 tracking-tight text-base-content'>
+              Categories
+            </h1>
+            <p className='text-base-content/60 text-base max-w-lg'>
+              Manage your product categories and organize your store efficiently.
             </p>
           </div>
           <button 
-            className='btn btn-primary shadow-sm'
+            className='btn btn-primary shadow-lg shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 rounded-xl px-6'
             onClick={openCreateModal}
           >
             <Plus className='w-5 h-5 mr-1' />
@@ -112,28 +114,36 @@ const Page = () => {
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className='bg-base-100 p-6 rounded-2xl shadow-sm border border-base-200 hover:shadow-md transition-all flex flex-col justify-between group'
+                className='bg-base-100 p-6 rounded-3xl shadow-sm border border-base-200/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden'
               >
-                <div className='mb-4'>
-                  <h3 className='text-xl font-bold text-base-content mb-2 line-clamp-1'>
+                {/* Élément décoratif en arrière-plan */}
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/5 rounded-full group-hover:bg-primary/10 transition-colors duration-500 blur-2xl z-0"></div>
+
+                <div className='mb-6 relative z-10'>
+                  {/* Icône de la catégorie */}
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <FolderTree className="w-6 h-6 text-primary" />
+                  </div>
+                  
+                  <h3 className='text-xl font-extrabold text-base-content mb-2 line-clamp-1'>
                     {category.name}
                   </h3>
-                  <p className='text-sm text-base-content/70 line-clamp-3'>
-                    {category.description || <span className="italic opacity-50">No description provided</span>}
+                  <p className='text-sm text-base-content/60 line-clamp-3 leading-relaxed'>
+                    {category.description || <span className="italic opacity-40">No description provided</span>}
                   </p>
                 </div>
                 
                 {/* Actions (Boutons d'édition et suppression) */}
-                <div className='flex justify-end gap-2 mt-4 pt-4 border-t border-base-200/50'>
+                <div className='flex justify-end gap-2 mt-2 pt-4 border-t border-base-200/50 relative z-10'>
                   <button 
-                    className='btn btn-sm btn-ghost text-base-content/70 hover:text-primary hover:bg-primary/10' 
+                    className='btn btn-sm btn-ghost rounded-xl text-base-content/50 hover:text-primary hover:bg-primary/10 transition-colors' 
                     onClick={() => openEditModal(category)}
                     title="Edit category"
                   >
                     <Pencil className='w-4 h-4' />
                   </button>
                   <button 
-                    className='btn btn-sm btn-ghost text-base-content/70 hover:text-error hover:bg-error/10' 
+                    className='btn btn-sm btn-ghost rounded-xl text-base-content/50 hover:text-error hover:bg-error/10 transition-colors' 
                     onClick={() => handleDeleteCategory(category.id)}
                     title="Delete category"
                   >
@@ -144,7 +154,7 @@ const Page = () => {
             ))}
           </div>
         ) : (
-          <div className='bg-base-100 rounded-3xl p-10 border border-base-200 shadow-sm'>
+          <div className='bg-base-100/50 rounded-[2rem] p-12 border-2 border-dashed border-base-300 shadow-sm flex justify-center'>
             <EmptyState
               message="No category found. Create your first one!"
               IconComponent='Group'

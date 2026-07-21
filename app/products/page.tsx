@@ -73,7 +73,7 @@ const Page = () => {
                         </p>
                     </div>
                     {/* Lien vers la page de création (ajuste le href selon ta route exacte) */}
-                    <Link href="/create-product" className='btn btn-primary shadow-sm'>
+                    <Link href="/new-product" className='btn btn-primary shadow-sm'>
                         <Plus className='w-5 h-5 mr-1' />
                         Nouveau Produit
                     </Link>
